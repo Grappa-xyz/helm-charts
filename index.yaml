@@ -3,6 +3,16 @@ entries:
   generic-service:
   - apiVersion: v2
     appVersion: 0.1.1
+    created: "2023-08-15T12:58:58.124549049Z"
+    description: A Helm chart for Kubernetes
+    digest: fcbbb0b7033aea6677abe6cf77e09940e9b66f5043e420ef3ba80d6e9ed085f5
+    name: generic-service
+    type: application
+    urls:
+    - https://github.com/Grappa-xyz/helm-charts/releases/download/generic-service-0.1.3/generic-service-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.1
     created: "2023-08-14T11:47:44.791464991Z"
     description: A Helm chart for Kubernetes
     digest: 888fcd1c2144baf0c32ddd2beab62709bbc44ce7326a66c67d94a494eec384f7
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/Grappa-xyz/helm-charts/releases/download/generic-service-0.1.2/generic-service-0.1.2.tgz
     version: 0.1.2
-generated: "2023-08-14T11:47:44.791472591Z"
+generated: "2023-08-15T12:58:58.124561349Z"

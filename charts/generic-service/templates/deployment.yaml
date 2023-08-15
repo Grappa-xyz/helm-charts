@@ -42,12 +42,20 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/healthz
               port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
+            successThreshold: 2
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/healthz
               port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
+            successThreshold: 2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

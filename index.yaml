@@ -41,4 +41,26 @@ entries:
     urls:
     - https://github.com/Grappa-xyz/helm-charts/releases/download/generic-service-0.1.2/generic-service-0.1.2.tgz
     version: 0.1.2
-generated: "2023-08-23T09:30:39.730791561Z"
+  node-service:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-29T16:43:08.061744393Z"
+    description: A Helm chart for Kubernetes
+    digest: ec0a220f6b31f093a597619ffe90e0677d0fc60efde91ab05226ddd20360fa8f
+    name: node-service
+    type: application
+    urls:
+    - https://github.com/Grappa-xyz/helm-charts/releases/download/node-service-0.1.0/node-service-0.1.0.tgz
+    version: 0.1.0
+  python-service:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2023-08-29T16:43:08.279263004Z"
+    description: A Helm chart for Kubernetes
+    digest: 32886da98cb4c4ea96e59feb2b0d0ee22cc943207997efbcc7b2ffb00bb3ddde
+    name: python-service
+    type: application
+    urls:
+    - https://github.com/Grappa-xyz/helm-charts/releases/download/python-service-0.0.1/python-service-0.0.1.tgz
+    version: 0.0.1
+generated: "2023-08-29T16:43:08.279281704Z"

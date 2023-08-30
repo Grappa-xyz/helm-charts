@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "node-service.fullname" . }}
+  name: {{ include "generic-service.fullname" . }}
   labels:
-    {{- include "node-service.labels" . | nindent 4 }}
+    {{- include "generic-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "node-service.selectorLabels" . | nindent 6 }}
+      {{- include "generic-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,28 +18,29 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "node-service.selectorLabels" . | nindent 8 }}
+        {{- include "generic-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "node-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "generic-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "node-service.fullname" . }}
+        - name: {{ include "generic-service.fullname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - secretRef:
-                name: {{ include "node-service.configSecretName" . }}
+                name: {{ include "generic-service.configSecretName" . }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if not .Values.healthcheck.disabled }}
           livenessProbe:
             httpGet:
               path: /api/healthz
@@ -56,6 +57,7 @@ spec:
             periodSeconds: 5
             failureThreshold: 6
             successThreshold: 1
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

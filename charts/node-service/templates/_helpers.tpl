@@ -74,23 +74,24 @@ Merge environment variables from values.yaml and secrets.
 If an environment variable is defined in values.yaml, it takes precedence.
 */}}
 {{- define "node-service.envVars" -}}
+{{- $envVars := dict -}}
 {{- range $env := .Values.env }}
-- name: {{ $env.name }}
-  value: {{ $env.value | quote }}
+{{- $envVars.Set $env.name $env.value }}
 {{- end }}
 {{- range $key, $value := .Values.envFrom.secret }}
-{{- $found := false -}}
-{{- range $env := .Values.env }}
-{{- if eq $env.name $key }}
-{{- $found = true -}}
-{{- end -}}
-{{- end -}}
-{{- if not $found }}
+{{- if not ($envVars.Has $key) }}
+{{- $envVars.Set $key (dict "secretKeyRef" (dict "name" (include "node-service.configSecretName" $) "key" $key)) }}
+{{- end }}
+{{- end }}
+{{- range $key, $value := $envVars }}
 - name: {{ $key }}
+{{- if typeIs "string" $value }}
+  value: {{ $value | quote }}
+{{- else }}
   valueFrom:
     secretKeyRef:
-      name: {{ include "node-service.configSecretName" $ }}
-      key: {{ $key }}
-{{- end -}}
-{{- end -}}
+      name: {{ $value.secretKeyRef.name }}
+      key: {{ $value.secretKeyRef.key }}
+{{- end }}
+{{- end }}
 {{- end -}}

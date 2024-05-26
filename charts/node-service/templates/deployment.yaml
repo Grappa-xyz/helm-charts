@@ -34,7 +34,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- include "node-service.envVars" . }}
+            {{- range .Values.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "node-service.configSecretName" . }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

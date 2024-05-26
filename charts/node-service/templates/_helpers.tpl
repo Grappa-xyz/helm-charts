@@ -67,3 +67,30 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Merge environment variables from values.yaml and secrets.
+If an environment variable is defined in values.yaml, it takes precedence.
+*/}}
+{{- define "node-service.envVars" -}}
+{{- range $env := .Values.env }}
+- name: {{ $env.name }}
+  value: {{ $env.value | quote }}
+{{- end }}
+{{- range $key, $value := .Values.envFrom.secret }}
+{{- $found := false -}}
+{{- range $env := .Values.env }}
+{{- if eq $env.name $key }}
+{{- $found = true -}}
+{{- end -}}
+{{- end -}}
+{{- if not $found }}
+- name: {{ $key }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "node-service.configSecretName" $ }}
+      key: {{ $key }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

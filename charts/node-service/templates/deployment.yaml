@@ -37,6 +37,8 @@ spec:
             - secretRef:
                 name: {{ include "node-service.configSecretName" . }}
           env:
+            - name: PROVIDER_RPC
+              value: "Ziv"
             {{- range .Values.env }}
             - name: {{ .name }}
               value: {{ .value | quote }}

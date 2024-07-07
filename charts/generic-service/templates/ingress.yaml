@@ -16,6 +16,7 @@ apiVersion: extensions/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}

@@ -40,24 +40,13 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /api/healthz
-          #     port: http
-          #   initialDelaySeconds: 15
-          #   periodSeconds: 5
-          #   failureThreshold: 6
-          #   successThreshold: 1
-          # readinessProbe:
-          #   httpGet:
-          #     path: /api/healthz
-          #     port: http
-          #   initialDelaySeconds: 15
-          #   periodSeconds: 5
-          #   failureThreshold: 6
-          #   successThreshold: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: cache-volume
+              mountPath: {{ .Values.persistence.mountPath }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -69,4 +58,8 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim }}
       {{- end }}

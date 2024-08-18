@@ -58,6 +58,8 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.persistence.enabled }}
       volumes:
         - name: cache-volume
           persistentVolumeClaim:

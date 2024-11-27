@@ -27,6 +27,18 @@ spec:
       serviceAccountName: {{ include "node-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        {{- range .Values.additionalVolumes }}
+        - name: {{ .name }}
+          {{- if .secret }}
+          secret:
+            secretName: {{ .secret.secretName }}
+          {{- end }}
+          {{- if .configMap }}
+          configMap:
+            name: {{ .configMap.name }}
+          {{- end }}
+        {{- end }}
       containers:
         - name: {{ include "node-service.fullname" . }}
           securityContext:
@@ -36,10 +48,26 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "node-service.configSecretName" . }}
+          env:
+            {{- range .Values.additionalEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          volumeMounts:
+            {{- range .Values.additionalVolumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+              {{- if .readOnly }}
+              readOnly: {{ .readOnly }}
+              {{- end }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /api/healthz

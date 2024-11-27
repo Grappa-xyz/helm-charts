@@ -80,3 +80,26 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+externalConfigSecret: {
+  enabled: false,
+  clusterSecretStoreName: "",
+  externalSecretName: ""
+}
+additionalEnv: []
+  # Example:
+  # - name: "GOOGLE_APPLICATION_CREDENTIALS"
+  #   value: "/etc/credentials"
+
+additionalVolumeMounts: []
+  # Example:
+  # - name: gcs-service-account-key
+  #   mountPath: /etc/credentials
+  #   subPath: service-account.json
+  #   readOnly: true
+
+additionalVolumes: []
+  # Example:
+  # - name: gcs-service-account-key
+  #   secret:
+  #     secretName: gcs-service-account-key
